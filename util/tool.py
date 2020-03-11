@@ -27,12 +27,23 @@ def hamming_distance(x):
             d += 1
     return d
 
+def cycle_left_shifting(raw, bits, n):
+    if n == 0:
+        return raw
+    
+    raw = (bin(raw))[2:]
+    raw = '0' * (bits - len(raw)) + raw
+    return int(raw[n:] + raw[:n], 2)
+
+def cycle_right_shifting(raw, bits, n):
+    return cycle_left_shifting(raw, bits, -n)
+
 def batchIO_write(data):
     io = IO()
     for times in range(len(data)):
         for row in range(len(data[times])):
             io.push_write(row, data[times][row])
 
-    
-
     return io
+
+

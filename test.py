@@ -6,7 +6,8 @@ from util.tool import batchIO_write
 
 import numpy as np
 
-data = np.asarray([[1, 2, 3, 4], [4, 3, 2, 1], [1, 1, 1, 1], [2, 2, 2, 2], [3, 3, 3, 3]], dtype=np.float64)
+data = np.asarray([[1, 2, 3, 4], [4, 3, 2, 1], [1, 1, 1, 1], [2, 2, 2, 2], [3.0, 3.0, 3.0, 3.0]], dtype=np.float64)
+print(data.shape)
 np.save('data.npy', data)
 io = batchIO_write(data)
 
@@ -21,7 +22,7 @@ mm.write_float(1, 1.0)
 mm.write_float(2, 2.0)
 mm.write_float(1, 2.0)
 mm.write_float(1, 0.0)
-mm.write_float(1, 2.2)
+mm.write_float(1, 3.0)
 print(mm.read_float(1))
 
 print(endurance.result())

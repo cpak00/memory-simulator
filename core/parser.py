@@ -1,9 +1,11 @@
 import struct
 
+from util.tool import cycle_left_shifting, cycle_right_shifting, hamming_distance
 
 class DataParser(object):
     '''
-    parse float into format of unsigned integer
+    parse float into format of unsigned integer\n
+    and do some bitwise operation like cycle shifting
     '''
     def __init__(self, bits):
         self.bits = bits
@@ -30,5 +32,14 @@ class DataParser(object):
         else:
             raise Exception('only 32bits or 64bits can be decoded as float32/double64')
         return s
+
+    def bcs_l(self, raw, n):
+        return cycle_left_shifting(raw, self.bits, n)
+
+    def bcs_r(self, raw, n):
+        return cycle_right_shifting(raw, self.bits, n)
+
+    def hamming(self, x):
+        return hamming_distance(x)
 
     pass

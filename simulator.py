@@ -3,6 +3,8 @@ from core.io import IO
 from FeFET.statistics.endurance import EnduranceCollector
 from FeFET.statistics.energy import EnergyCollector
 
+from optimization.HammingCompareBasedCoder import HammingCompareBasedCoder
+
 from util.tool import batchIO_write
 
 import numpy as np
@@ -38,9 +40,16 @@ class Simulator(object):
 
 
 if __name__ == '__main__':
+    hammingCoder = HammingCompareBasedCoder(4, 1)
     sim = Simulator(64, 10)
+    sim.mm.bind_coder(hammingCoder)
     sim.load_batch_write('data.npy')
     sim.run()
     print(sim.result())
+    print(sim.mm.coder.shifting_content)
+    print(sim.mm.read_float(0))
+    print(sim.mm.read_float(1))
+    print(sim.mm.read_float(2))
+    print(sim.mm.read_float(3))
 
     print('=== completed ===')

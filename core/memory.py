@@ -1,6 +1,7 @@
 import numpy as np
 from core.parser import DataParser
 from core.collector import Collector
+from core.coder import Coder
 from util.tool import bits2dtype
 
 from config import config
@@ -18,6 +19,7 @@ class GeneralMemory(object):
 
         self.content = np.zeros(rows, dtype=self.dtype)
         self.bits = bits
+        self.rows = rows
         # charge bitline
         self.bitline = 0
         # bind data parser with memory
@@ -29,6 +31,13 @@ class GeneralMemory(object):
                 collector.bind(self)
             else:
                 raise Exception('collector must inherited from core.Collector')
+        # default coder
+        self.coder = Coder()
+        return
+
+    def bind_coder(self, coder):
+        self.coder = coder
+        self.coder.bind(self)
         return
 
     def write_raw(self, addr, data):
@@ -44,11 +53,15 @@ class GeneralMemory(object):
             print('write with data: %s => addr: %s' % (hex(data), addr))
         return
 
+    def write(self, addr, data):
+        data = self.coder.encode(addr, data);
+        self.write_raw(addr, data)
+
     def write_float(self, addr, data):
         '''
         write_float(addr, data): write data -> memory[addr]
         '''
-        self.write_raw(addr, self.parser.float2hex(data))
+        self.write(addr, self.parser.float2hex(data))
 
     def read_raw(self, addr):
         '''
@@ -63,10 +76,14 @@ class GeneralMemory(object):
             print('read from addr: %s => data: %s' % (addr, hex(data)))
         return data
 
+    def read(self, addr):
+        data = self.read_raw(addr)
+        return self.coder.decode(addr, data)
+
     def read_float(self, addr):
         '''
         read_float(addr): read addr -> data
         '''
-        return self.parser.hex2float(self.read_raw(addr))
+        return self.parser.hex2float(self.read(addr))
 
     pass
