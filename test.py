@@ -8,7 +8,6 @@ import numpy as np
 
 data = np.asarray([[1, 2, 3, 4], [4, 3, 2, 1], [1, 1, 1, 1], [2, 2, 2, 2], [3.0, 3.0, 3.0, 3.0]], dtype=np.float64)
 print(data.shape)
-np.save('data.npy', data)
 io = batchIO_write(data)
 
 print(io.pop().addr)

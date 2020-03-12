@@ -1,4 +1,5 @@
 import struct
+import numpy as np
 
 from util.tool import cycle_left_shifting, cycle_right_shifting, hamming_distance
 
@@ -32,6 +33,11 @@ class DataParser(object):
         else:
             raise Exception('only 32bits or 64bits can be decoded as float32/double64')
         return s
+
+    def int2bitsarray(self, data):
+        l = [int(n) for n in list(bin(data)[2:])]
+        l = [0] * (self.bits - len(l)) + l
+        return np.array(l, dtype=int)
 
     def bcs_l(self, raw, n):
         return cycle_left_shifting(raw, self.bits, n)

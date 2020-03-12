@@ -23,11 +23,14 @@ class EnduranceCollector(Collector):
         return
 
     def _get_worst_row(self):
-        index = np.argmax(self.memory.content)
-        bit, row = divmod(index, self.memory.bits)
+        index = np.argmax(self.content)
+        row, bit = divmod(index, self.memory.bits)
         return row
 
     def result(self):
         return self.content[self._get_worst_row()]
+
+    def clear(self):
+        self.content[:] = 0
 
     pass

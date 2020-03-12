@@ -86,4 +86,8 @@ class GeneralMemory(object):
         '''
         return self.parser.hex2float(self.read(addr))
 
+    def clear(self):
+        self.content[:] = 0
+        return
+
     pass

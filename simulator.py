@@ -3,11 +3,16 @@ from core.io import IO
 from FeFET.statistics.endurance import EnduranceCollector
 from FeFET.statistics.energy import EnergyCollector
 
+from core.coder import Coder
 from optimization.HammingCompareBasedCoder import HammingCompareBasedCoder
+from optimization.OrderedCompareBasedCoder import OrderedCompareBasedCoder
+from optimization.WeightBasedCompareCoder import WeightBasedCompareCoder
 
 from util.tool import batchIO_write
 
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 class Simulator(object):
     def __init__(self, bits, rows):
@@ -32,24 +37,66 @@ class Simulator(object):
 
             self.mm.write_float(op.addr, op.data)
 
+    def reset(self):
+        self.io.restart_io()
+        self.mm.clear()
+        self.endurance.clear()
+        self.energy.clear()
+
     def result(self):
         results = {"endurance": self.endurance.result(),
                 "energy": self.energy.result()}
         return results
+    
     pass
 
 
 if __name__ == '__main__':
-    hammingCoder = HammingCompareBasedCoder(4, 1)
-    sim = Simulator(64, 10)
-    sim.mm.bind_coder(hammingCoder)
+    sim = Simulator(32, 6000)
     sim.load_batch_write('data.npy')
+    
+    '''
+    sim.mm.bind_coder(Coder())
+    sim.reset()
     sim.run()
-    print(sim.result())
-    print(sim.mm.coder.shifting_content)
-    print(sim.mm.read_float(0))
-    print(sim.mm.read_float(1))
-    print(sim.mm.read_float(2))
-    print(sim.mm.read_float(3))
+    print('=== completed code===')
+    plt.figure()
+    sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
+    plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
+    plt.savefig('NoneCoder.png')
+    '''
+    sim.mm.bind_coder(HammingCompareBasedCoder(4, 1000))
+    sim.reset()
+    sim.run()
+    print('=== completed hamming===')
+    # print(sim.result())
+    # print(sim.mm.coder.shifting_content)
+    # print(sim.mm.read_float(0))
+    # print(sim.mm.read_float(1))
+    # print(sim.mm.read_float(2))
+    # print(sim.mm.read_float(3))
+    plt.figure()
+    sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
+    plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
+    plt.savefig('HammingCompareBasedCoder.png')
 
-    print('=== completed ===')
+    '''
+    sim.mm.bind_coder(OrderedCompareBasedCoder())
+    sim.reset()
+    sim.run()
+    print('=== completed code===')
+    plt.figure()
+    sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
+    plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
+    plt.savefig('OrderedCompareBasedCoder.png')
+    
+
+    sim.mm.bind_coder(WeightBasedCompareCoder())
+    sim.reset()
+    sim.run()
+    print('=== completed code===')
+    plt.figure()
+    sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
+    plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
+    plt.savefig('WeightBasedCompareCoder.png')
+    '''
