@@ -31,7 +31,8 @@ class EnergyCollector(Collector):
         return self.content_write * config['write energy'] + self.content_read * config['read energy']
 
     def clear(self):
-        self.cotent = 0
+        self.content_read = 0
+        self.content_write = 0
         return
 
     pass
