@@ -4,11 +4,12 @@ from util.tool import cycle_right_shifting
 import numpy as np
 
 class OrderedCompareBasedCoder(Coder):
-    def __init__(self, shift_per_write=4, compare_time=10):
+    def __init__(self, shift_per_write=4, compare_time=10, energy_rate=1/4):
         self.shifting = 0
         self.compare_flag = 0
         self.shift_per_write = shift_per_write
         self.compare_time = compare_time
+        self.energy_rate = energy_rate
         self.shifting_content = np.zeros((0), dtype=int)
         return
 
@@ -28,7 +29,7 @@ class OrderedCompareBasedCoder(Coder):
             bitline = int(self.mm.bitline)
 
             cost_energy = self.mm.parser.hamming(bitline ^ current_row)
-            if cost_energy <= (self.mm.bits / 4):
+            if cost_energy <= (self.mm.bits * self.energy_rate):
                 self.shifting_content[addr] = self.shifting
                 return current_row
             else:
