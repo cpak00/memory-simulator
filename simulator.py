@@ -7,6 +7,7 @@ from core.coder import Coder
 from optimization.HammingCompareBasedCoder import HammingCompareBasedCoder
 from optimization.OrderedCompareBasedCoder import OrderedCompareBasedCoder
 from optimization.WeightBasedCompareCoder import WeightBasedCompareCoder
+from optimization.AdvancedOrderedCoder import AdvancedOrderedCoder
 
 from util.tool import batchIO_write
 
@@ -64,7 +65,7 @@ if __name__ == '__main__':
     sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
     plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
     plt.savefig('NoneCoder.png')
-    '''
+    
     sim.mm.bind_coder(HammingCompareBasedCoder(4, 1000))
     sim.reset()
     sim.run()
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
     plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
     plt.savefig('HammingCompareBasedCoder.png')
-
+    '''
     '''
     sim.mm.bind_coder(OrderedCompareBasedCoder())
     sim.reset()
@@ -94,3 +95,11 @@ if __name__ == '__main__':
     plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
     plt.savefig('WeightBasedCompareCoder.png')
     '''
+    sim.mm.bind_coder(AdvancedOrderedCoder())
+    sim.reset()
+    sim.run()
+    print('=== completed code===')
+    plt.figure()
+    sns.heatmap(sim.endurance.content, cmap=plt.cm.viridis)
+    plt.title('energy: %s, endurance: %s' % (sim.result()['energy'], max(sim.result()['endurance'])))
+    plt.savefig('AdvancedOrderedCoder.png')
